@@ -1,0 +1,51 @@
+Metadata-Version: 2.1
+Name: PyQtChart
+Version: 5.15.7
+Requires-Python: >=3.8
+Summary: Python bindings for the Qt Charts library
+Description-Content-Type: text/markdown
+Project-Url: homepage, https://www.riverbankcomputing.com/software/pyqtchart/
+Requires-Dist: PyQt5-sip (>=12.13, <13)
+Requires-Dist: PyQtChart-Qt5 (>=5.15.0, <5.16.0)
+Requires-Dist: PyQt5 (>=5.15.4)
+License: GPL v3
+Author-Email: Riverbank Computing Limited <info@riverbankcomputing.com>
+
+# PyQtChart - Python Bindings for the Qt Charts Library
+
+PyQtChart is a set of Python bindings for The Qt Company's Qt Charts library.
+The bindings sit on top of PyQt5 and are implemented as a single module.
+
+
+## Author
+
+PyQtChart is copyright (c) Riverbank Computing Limited.  Its homepage is
+https://www.riverbankcomputing.com/software/pyqtchart/.
+
+Support may be obtained from the PyQt mailing list at
+https://www.riverbankcomputing.com/mailman/listinfo/pyqt/.
+
+
+## License
+
+PyQtChart is released under the GPL v3 license and under a commercial license
+that allows for the development of proprietary applications.
+
+
+## Documentation
+
+The documentation for the latest release can be found
+[here](https://www.riverbankcomputing.com/static/Docs/PyQt5/).
+
+
+## Installation
+
+The GPL version of PyQtChart can be installed from PyPI:
+
+    pip install PyQtChart
+
+`pip` will also build and install the bindings from the sdist package but Qt's
+`qmake` tool must be on `PATH`.
+
+The `sip-install` tool will also install the bindings from the sdist package
+but will allow you to configure many aspects of the installation.

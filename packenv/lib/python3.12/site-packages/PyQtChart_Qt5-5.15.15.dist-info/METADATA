@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: PyQtChart-Qt5
+Version: 5.15.15
+Summary: The subset of a Qt installation needed by PyQtChart.
+Home-page: https://www.riverbankcomputing.com/software/pyqt/
+Author: Riverbank Computing Limited
+Author-email: info@riverbankcomputing.com
+License: GPL v3
+Platform: Linux
+Platform: macOS
+Platform: Windows
+
+This package contains the subset of a Qt installation that is required by
+PyQtChart.  It would normally be installed automatically by pip when
+you install PyQtChart.
+
+This package is licensed under the terms of the GPL v3.

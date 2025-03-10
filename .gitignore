@@ -1,5 +1,7 @@
 dist
 build
 venv
+release
+packenv
 .idea
 __pycache__
