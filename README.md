@@ -10,7 +10,7 @@
 ## Dependencies [Development]:
 * Ubuntu / Linux Mint:
   ```
-  sudo apt-get install python3-pyqt5, python3-pyqt5.qtchart
+  sudo apt-get install python3-pyqt6, python3-pyqt6.qtchart
   ```
 
   ```
@@ -23,7 +23,7 @@
  
 * Fedora:
   ```
-  sudo dnf install python3-qt5
+  sudo dnf install python3-qt6
   sudo dnf install python3-pyqtchart
   ```
   Make sure SecureBoot is off.
@@ -85,7 +85,7 @@ nvidia-smi
 ## Dependencies [Development]:
 * Ubuntu / Linux Mint:
   ```sh
-  sudo apt-get install python3-pyqt5, python3-pyqt5.qtchart
+  sudo apt-get install python3-pyqt6, python3-pyqt6.qtchart
   ```
 
   ```sh
@@ -104,7 +104,7 @@ nvidia-smi
   
 * Fedora:
   ```sh
-  sudo dnf install python3-qt5
+  sudo dnf install python3-qt6
   sudo dnf install python3-pyqtchart
   ```
   Make sure SecureBoot is off.
@@ -136,10 +136,10 @@ nvidia-smi
  #install python dependencies with venv
  python3 -m venv ./venv
  source ./venv/bin/activate
- pip install PyQt5 PyQtChart
+ pip install PyQt6 PyQtChart
  ```
 Packages:
-* ```Python Qt5``` -> [PyQt5](https://pypi.org/project/PyQt5/)
+* ```Python Qt6``` -> [PyQt6](https://pypi.org/project/PyQt6/)
 * ```acpi_ec``` -> [acpi_ec by musikid](https://github.com/musikid/acpi_ec/)
 * ```msr-tools``` -> [msr-tools by intel](https://github.com/intel/msr-tools)
 
