@@ -175,6 +175,14 @@ def checkVoltage(self):
 
 class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
     def __init__(self):
+        super().__init__()
+        self._initialize_variables()
+        self.setupUi(self)
+        self._initialize_ec_handler()
+        self._initialize_ui()
+        self.setUpdateUITimer()
+
+    def _initialize_variables(self):
         self.turboEnabled = False
         self.cpufanspeed = 0
         self.gpufanspeed = 0
@@ -183,18 +191,14 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.sysTemp = 0
         self.voltage = 0.5
         self.underVolt = ""
-        self.minrecordedVoltage = (
-            2.0  # V # Max operating voltage for Intel desktop 13th gen
-        )
-        self.maxrecordedVoltage = 0  # V
+        self.minrecordedVoltage = 2.0
+        self.maxrecordedVoltage = 0
         self.selected_color = (255, 255, 255)
-
         self.powerPluggedIn = False
         self.onBatteryPower = False
         self.displayOverdrive = False
         self.nitroMode = ECS.DEFAULTMODE.value
         self.usbCharging = ECS.USBCHARGINGON.value
-
         self.cpuMode = ECS.CPU_AUTO_MODE.value
         self.gpuMode = ECS.GPU_AUTO_MODE.value
         self.cpuFanMode = PFS.Auto
@@ -203,22 +207,17 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.trackpad = ECS.TRACKPADENABLED.value
         self.batteryChargeLimit = ECS.BATTERYLIMITOFF.value
 
-        # Setup the QT window
-        super(MainWindow, self).__init__()
-        self.setupUi(self)
-
-        checkUndervoltStatus(self)
+    def _initialize_ec_handler(self):
         self.ECHandler = ECWrite()
         self.ECHandler.ec_refresh()
 
+    def _initialize_ui(self):
+        checkUndervoltStatus(self)
         self.checkPowerTempFan()
         self.checkNitroStatus()
         self.kbLoadConfig()
         self.loadConfig()
         self.setupGUI()
-
-        # Setup new timer to periodically read the EC regsiters and update UI
-        self.setUpdateUITimer()
 
     # ----------------------------------------------------
     # Initialise the frame, check all registers and set the appropriate widgets
@@ -421,7 +420,7 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.ECHandler.ec_write(
             int(ECS.NITROMODE.value, 0), int(ECS.EXTREMEMODE.value, 0)
         )
-        self.setGlobalTurbo()
+        self.setGlobalAuto()
 
     def setGlobalAuto(self):
         if self.turboEnabled:
