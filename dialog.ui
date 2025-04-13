@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NitroSense</class>
+ <widget class="QDialog" name="NitroSense">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>680</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Nitro Sense™</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="fan_control_tab">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>480</width>
+       <height>680</height>
+      </rect>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Home</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="homeLayout">
+       <item>
+        <widget class="QGroupBox" name="status_box">
+         <property name="title">
+          <string>Status</string>
+         </property>
+         <layout class="QVBoxLayout" name="statusLayout">
+          <item>
+           <widget class="QLabel" name="powerStatusLabel">
+            <property name="text">
+             <string>Power Status:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="batteryStatusLabel">
+            <property name="text">
+             <string>Battery Status:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="batteryChargeLimitLabel">
+            <property name="text">
+             <string>Charge Limit:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="nitroModeLabel">
+            <property name="text">
+             <string>Nitro Mode:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="temp_box">
+         <property name="title">
+          <string>Temps</string>
+         </property>
+         <layout class="QVBoxLayout" name="tempLayout">
+          <item>
+           <widget class="QLabel" name="cpuTempLabel">
+            <property name="text">
+             <string>CPU:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="gpuTempLabel">
+            <property name="text">
+             <string>GPU:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="sysTempLabel">
+            <property name="text">
+             <string>SYS:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="keyboard_tab">
+      <attribute name="title">
+       <string>Keyboard</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="keyboardLayout">
+       <item>
+        <widget class="QGroupBox" name="keyboard_box">
+         <property name="title">
+          <string>Keyboard</string>
+         </property>
+         <layout class="QVBoxLayout" name="keyboardBoxLayout">
+          <item>
+           <widget class="QLabel" name="mode_label">
+            <property name="text">
+             <string>Mode:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="mode_combo">
+            <item>
+             <property name="text">
+              <string>Static</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Breath</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Neon</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Wave</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="monitoring_tab">
+      <attribute name="title">
+       <string>Monitoring</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="monitoringLayout">
+       <item>
+        <widget class="QGroupBox" name="chart_box">
+         <property name="title">
+          <string>Charts</string>
+         </property>
+         <layout class="QVBoxLayout" name="chartLayout">
+          <item>
+           <widget class="QLabel" name="voltageChart">
+            <property name="text">
+             <string>Voltage Chart</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
