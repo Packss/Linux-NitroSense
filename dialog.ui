@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -26,10 +26,19 @@
    <string>Nitro Sense™</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget #tab, #monitoring_tab, #keyboard_tab {;
+   <string notr="true">* {;
+	color: white;
+	selection-background-color: rgb(255, 0, 0);
+}
+QWidget #tab, #monitoring_tab, #keyboard_tab {;
     background-repeat: no-repeat;
     background-position: top center;
     background-color: #252525;
+}
+QPushButton, QComboButton, QComboBox {;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-color: #535353;
 }
 QGroupBox {
     color: blue;
@@ -45,20 +54,32 @@ QGroupBox #monitoring_box {
     /* background-color: yellow; */
 }
 
-QGroupBox #powerStatusLabel, #batteryStatusLabel, #batteryChargeLimitLabel, #nitroModeLabel, #cpuTempLabel, #gpuTempLabel, #sysTempLabel, #cpuFanSpeedLabel, #gpuFanSpeedLabel, #voltageLabel, #voltageMinMaxLabel, #voltageAverageLabel, #mode_label, #zone_label, #speed_label, #brightness_label, #direction_label {
+QGroupBox #powerStatusLabel, #batteryStatusLabel, #batteryChargeLimitLabel, #nitroModeLabel, #cpuTempLabel, #gpuTempLabel, #sysTempLabel, #cpuFanSpeedLabel, #gpuFanSpeedLabel, #voltageLabel, #voltageMinMaxLabel, #voltageAverageLabel, #mode_label, #zone_label, #speed_label, #brightness_label, #direction_label, #undervolt_box {
     color: gray;
 }
 QGroupBox::title {
     subcontrol-origin: margin;
     subcontrol-position: top center;
     color: white;
+}
+QRadioButton::indicator {
+    border: 2px solid gray;
+}
+QRadioButton::indicator:checked {
+    background-color: red;
+}
+QCheckBox::indicator {
+	border: 2px solid gray;
+}
+QCheckBox::indicator:checked {
+	background-color: red;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="fan_control_tab">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -85,10 +106,28 @@ QGroupBox::title {
      <property name="cursor">
       <cursorShape>ArrowCursor</cursorShape>
      </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>480</width>
+        <height>680</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <attribute name="title">
        <string>Home</string>
       </attribute>
@@ -152,7 +191,13 @@ QGroupBox::title {
              <property name="title">
               <string>Status</string>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+             </property>
              <layout class="QFormLayout" name="formLayout_2">
+              <property name="labelAlignment">
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+              </property>
               <property name="horizontalSpacing">
                <number>20</number>
               </property>
@@ -439,6 +484,9 @@ QGroupBox::title {
                 </property>
                 <property name="text">
                  <string>Default</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -883,6 +931,9 @@ QGroupBox::title {
                 <property name="text">
                  <string>Charge Limit</string>
                 </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
              </layout>
@@ -908,6 +959,9 @@ QGroupBox::title {
            </property>
            <property name="cursor">
             <cursorShape>ArrowCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
            </property>
            <property name="title">
             <string>Undervolt</string>
@@ -996,12 +1050,15 @@ QGroupBox::title {
               <property name="font">
                <font>
                 <family>TT Squares</family>
-                <pointsize>11</pointsize>
+                <pointsize>8</pointsize>
                 <fontweight>Light</fontweight>
                </font>
               </property>
               <property name="cursor" stdset="0">
                <cursorShape>ArrowCursor</cursorShape>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(25, 25, 25);</string>
               </property>
              </widget>
             </item>
@@ -1077,6 +1134,9 @@ QGroupBox::title {
                 </property>
                 <item>
                  <widget class="QRadioButton" name="cpu_auto">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1177,10 +1237,13 @@ QGroupBox::title {
                  <cursorShape>ArrowCursor</cursorShape>
                 </property>
                 <property name="maximum">
-                 <number>10</number>
+                 <number>20</number>
                 </property>
                 <property name="value">
-                 <number>3</number>
+                 <number>20</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Orientation::Vertical</enum>
@@ -1238,6 +1301,9 @@ QGroupBox::title {
                  </property>
                  <property name="cursor">
                   <cursorShape>ArrowCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -1310,6 +1376,9 @@ QGroupBox::title {
                  </property>
                  <property name="cursor">
                   <cursorShape>ArrowCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true"/>
                  </property>
                  <property name="text">
                   <string>Undervolt</string>
@@ -1572,10 +1641,13 @@ QGroupBox::title {
                  <cursorShape>ArrowCursor</cursorShape>
                 </property>
                 <property name="maximum">
-                 <number>10</number>
+                 <number>20</number>
                 </property>
                 <property name="value">
-                 <number>3</number>
+                 <number>20</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Orientation::Vertical</enum>
@@ -1614,6 +1686,27 @@ QGroupBox::title {
       </layout>
      </widget>
      <widget class="QWidget" name="keyboard_tab">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>480</width>
+        <height>680</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>480</width>
+        <height>680</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <attribute name="title">
        <string>Keyboard</string>
       </attribute>
@@ -1659,6 +1752,12 @@ QGroupBox::title {
             </property>
             <property name="verticalSpacing">
              <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="rightMargin">
+             <number>8</number>
             </property>
             <item row="0" column="0">
              <widget class="QLabel" name="mode_label">
@@ -1858,7 +1957,7 @@ QGroupBox::title {
               </item>
              </widget>
             </item>
-            <item row="5" column="1">
+            <item row="5" column="0">
              <widget class="QPushButton" name="color_button">
               <property name="font">
                <font>
@@ -1913,66 +2012,6 @@ QGroupBox::title {
            </widget>
           </item>
          </layout>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="monitoring_tab">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>480</width>
-        <height>680</height>
-       </size>
-      </property>
-      <attribute name="title">
-       <string>Monitoring</string>
-      </attribute>
-      <widget class="QGroupBox" name="chart_box">
-       <property name="geometry">
-        <rect>
-         <x>4</x>
-         <y>4</y>
-         <width>461</width>
-         <height>631</height>
-        </rect>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>480</width>
-         <height>680</height>
-        </size>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-       <property name="title">
-        <string>Charts</string>
-       </property>
-       <layout class="QVBoxLayout" name="chartLayout">
-        <item>
-         <widget class="QLabel" name="voltageChart">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Voltage Chart</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </widget>

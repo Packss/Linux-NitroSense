@@ -2,7 +2,7 @@ import sys
 import os
 
 from PyQt6 import QtWidgets, QtGui
-from PyQt6.QtCore import Qt, QTimer, QProcess
+from PyQt6.QtCore import Qt, QTimer, QProcess, QObject, pyqtSignal
 from PyQt6.QtGui import QPalette, QColor
 
 
@@ -90,17 +90,36 @@ UPDATE_INTERVAL = 1000  # 1 sec interval
 
 # Read the current undervoltage offsets
 
+class CommandRunner(QObject):
+    finished = pyqtSignal(str)  # Emits the full output when done
+
+    def __init__(self):
+        super().__init__()
+        self.process = QProcess()
+        self.process.readyReadStandardOutput.connect(self._handle_output)
+        self.process.finished.connect(self._on_finished)
+        self.output = ""  # Store output here
+
+    def run(self, cmd, args):
+        self.output = ""  # Reset output
+        self.process.start(cmd, args)
+        self.process.waitForStarted()
+        self.process.waitForFinished()
+        self.process.close()
+
+    def _handle_output(self):
+        new_output = self.process.readAllStandardOutput().data().decode()
+        self.output += new_output  # Append to stored output
+
+    def _on_finished(self):
+        self.finished.emit(self.output)  # Emit the full output
+
 
 def checkUndervoltStatus(self):
-    process = QProcess()
-    process.start("amdctl -m -g -c0")
-    # process.waitForStarted()
-    process.waitForFinished()
-    # process.waitForReadyRead()
-    underVoltStatus = process.readAll()
-    process.close()
+    runner = CommandRunner()
+    runner.run("amdctl", ["-m", "-g", "-c0"])
+    underVoltStatus = runner.output
 
-    underVoltStatus = str(underVoltStatus, "utf-8")
     underVoltStatus = underVoltStatus.splitlines()[3:]
     underVoltStatus = "\n".join(underVoltStatus)
     # print(underVoltStatus)
@@ -128,10 +147,9 @@ voltage_process = QProcess()
 
 
 def checkVoltage(self):
-    voltage_process.start("amdctl -g")  # All processors
-    voltage_process.waitForFinished()
-    voltage = voltage_process.readAll()
-    voltage = str(voltage, "utf-8").splitlines()
+    runner = CommandRunner()
+    runner.run("amdctl", ["-g"])
+    voltage = runner.output
     voltages = []
     for line in voltage:
         if "mV" in line:
@@ -187,7 +205,7 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
 
         # Setup the QT window
         super(MainWindow, self).__init__()
-        self.setupUI(self)
+        self.setupUi(self)
 
         checkUndervoltStatus(self)
         self.ECHandler = ECWrite()
@@ -217,7 +235,9 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.gpu_manual.clicked.connect(self.gpusetmanual)
         self.gpu_turbo.clicked.connect(self.gpumax)
         self.cpuManualSlider.valueChanged.connect(self.cpumanual)
+        self.cpuManualSlider.setEnabled(True)
         self.gpuManualSlider.valueChanged.connect(self.gpumanual)
+        self.gpuManualSlider.setEnabled(True)
         self.exit_button.clicked.connect(self.shutdown)
 
         self.undervolt_button.clicked.connect(lambda: applyUndervolt(self))
@@ -663,29 +683,28 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.setBatteryStatus()
         self.setNitroMode()
 
-        self.voltageChart.update_data(float("%1.2f" % self.voltage))
-        self.cpuChart.update_data(self.cpuTemp)
-        self.gpuChart.update_data(self.gpuTemp)
-        self.sysChart.update_data(self.sysTemp)
-        self.cpuFanChart.update_data(self.cpufanspeed)
-        self.gpuFanChart.update_data(self.gpufanspeed)
-
+        #self.voltageChart.update(float("%1.2f" % self.voltage))
+        #self.cpuChart.update(self.cpuTemp)
+        #self.gpuChart.update(self.gpuTemp)
+        #self.sysChart.update(self.sysTemp)
+        #self.cpuFanChart.update(self.cpufanspeed)
+        #self.gpuFanChart.update(self.gpufanspeed)
+#
         self.cpuFanSpeedValue.setText(str(self.cpufanspeed) + " RPM")
         self.gpuFanSpeedValue.setText(str(self.gpufanspeed) + " RPM")
         self.cpuTempValue.setText(str(self.cpuTemp) + "°")
         self.gpuTempValue.setText(str(self.gpuTemp) + "°")
         self.sysTempValue.setText(str(self.sysTemp) + "°")
-
+#
         self.powerStatusValue.setText(str(self.powerPluggedIn))
 
     # ----------------------------------------------------
     # Exit the program cleanly
     def shutdown(self):
         print("Cleaning up..")
-        self.ECHandler.shutdownEC()
+        self.ECHandler.shutdown_ec()
         voltage_process.close()
         print("Exiting")
-        # app.exit(0)
         exit(0)
 
 
@@ -693,12 +712,12 @@ app = QtWidgets.QApplication(sys.argv)
 application = MainWindow()
 app.setApplicationName("Linux NitroSense")
 # Makes the window not resizeable
-application.setFixedSize(application.WIDTH, application.HEIGHT)
+application.setFixedSize(500, 700)
+
 application.setWindowIcon(QtGui.QIcon("nitro-sense.ico"))
 # Set global window opacity
 # application.setWindowOpacity(0.97)
 
-app.setStyle("Breeze")
 # Dark theme implementation
 palette = QPalette()
 palette.setColor(QPalette.ColorRole.Window, QColor(53, 53, 53))
@@ -714,8 +733,9 @@ palette.setColor(QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
 palette.setColor(QPalette.ColorRole.Link, QColor(42, 130, 218))
 palette.setColor(QPalette.ColorRole.Highlight, QColor(42, 130, 218))
 palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
+palette.setColor(QPalette.ColorRole.NoRole, QColor(53, 53, 53))
 app.setPalette(palette)
-
+application.setPalette(palette)
 application.show()
 app.exec()
 sys.exit()
