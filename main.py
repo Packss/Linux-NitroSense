@@ -1,94 +1,26 @@
 import sys
 import os
+import enum
 
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtCore import Qt, QTimer, QProcess, QObject, pyqtSignal
 from PyQt6.QtGui import QPalette, QColor
 
-
-from frontend import Ui_NitroSense
-import keyboard
-from ecwrite import *
-import enum
-
+import utils.keyboard as keyboard
+from core.ecwrite import *
+from ui.frontend import Ui_NitroSense
+from core.device_regs import ECS
 
 CONFIG_FOLDER = "/etc/nitrosense/"
-
-## ------------------------------##
-## --Nitro EC Register Class--##
-# ECState
-
-
-class ECS(enum.Enum):
-    GPU_FAN_MODE_CONTROL = "0x21"
-    GPU_AUTO_MODE = "0x10"
-    GPU_TURBO_MODE = "0x20"
-    GPU_MANUAL_MODE = "0x30"
-    GPU_MANUAL_SPEED_CONTROL = "0x3A"
-
-    CPU_FAN_MODE_CONTROL = "0x22"
-    CPU_AUTO_MODE = "0x04"
-    CPU_TURBO_MODE = "0x08"
-    CPU_MANUAL_MODE = "0x0C"
-    CPU_MANUAL_SPEED_CONTROL = "0x37"
-
-    KB_30_SEC_AUTO = "0x06"
-    KB_30_AUTO_OFF = "0x00"
-    KB_30_AUTO_ON = "0x1E"
-
-    CPUFANSPEEDHIGHBITS = "0x13"
-    CPUFANSPEEDLOWBITS = "0x14"
-    GPUFANSPEEDHIGHBITS = "0x15"
-    GPUFANSPEEDLOWBITS = "0x16"
-
-    CPUTEMP = "0xB0"
-    GPUTEMP = "0xB6"
-    SYSTEMP = "0xB3"
-
-    POWERSTATUS = "0x00"
-    POWERPLUGGEDIN = "0x01"
-    POWERUNPLUGGED = "0x00"
-
-    BATTERYCHARGELIMIT = "0x03"
-    BATTERYLIMITON = "0x51"
-    BATTERYLIMITOFF = "0x11"
-
-    BATTERYSTATUS = "0xC1"
-    BATTERYPLUGGEDINANDCHARGING = "0x02"
-    BATTERYDRAINING = "0x01"
-    BATTERYOFF = "0x00"
-
-    POWEROFFUSBCHARGING = "0x08"
-    USBCHARGINGON = "0x0F"
-    USBCHARGINGOFF = "0x1F"
-
-    NITROMODE = "0x2C"
-    QUIETMODE = "0x00"
-    DEFAULTMODE = "0x01"
-    EXTREMEMODE = "0x04"
-
-    TRACKPADSTATUS = "0xA1"
-    TRACKPADENABLED = "0x00"
-    TRACKPADDISABLED = "0x04"
-
+UPDATE_INTERVAL_MS = 1000  # 1 sec interval
 
 ## ------------------------------##
 ## -------Nitro Fan Mode------##
-# ProcessorFanState
-
-
 class PFS(enum.Enum):
     Manual = 0
     Auto = 1
     Turbo = 2
 
-
-## ------------------------------##
-## ---------Undervolting---------##
-COREOFFSET = 100  # mV
-UPDATE_INTERVAL = 1000  # 1 sec interval
-
-# Read the current undervoltage offsets
 
 class CommandRunner(QObject):
     finished = pyqtSignal(str)  # Emits the full output when done
@@ -103,9 +35,7 @@ class CommandRunner(QObject):
     def run(self, cmd, args):
         self.output = ""  # Reset output
         self.process.start(cmd, args)
-        self.process.waitForStarted()
         self.process.waitForFinished()
-        self.process.close()
 
     def _handle_output(self):
         new_output = self.process.readAllStandardOutput().data().decode()
@@ -113,43 +43,37 @@ class CommandRunner(QObject):
 
     def _on_finished(self):
         self.finished.emit(self.output)  # Emit the full output
+    
+    def close(self):
+        self.process.close()
 
 
 def checkUndervoltStatus(self):
     runner = CommandRunner()
     runner.run("amdctl", ["-m", "-g", "-c0"])
     underVoltStatus = runner.output
-
     underVoltStatus = underVoltStatus.splitlines()[3:]
     underVoltStatus = "\n".join(underVoltStatus)
-    # print(underVoltStatus)
     self.undervolt = underVoltStatus
 
 
 # Apply the undervoltage offsets values
-
-
 def applyUndervolt(self):
-    process = QProcess()
+    runner = CommandRunner()
     core = self.undervolt_dropdown.currentIndex()
     vid = core * 16
     if vid == 0:
         vid = 1
-    process.start(f"amdctl -m -v{vid}")
-    process.waitForFinished()
-    process.close()
+    runner.run("amdctl", ["-m", f"-v{vid}"])
     checkUndervoltStatus(self)
 
 
 # Global process better perf instead of creating and destroying every update cycle.
-voltage_process = QProcess()
 # Update the current VCore
-
-
+voltage_process = CommandRunner()
 def checkVoltage(self):
-    runner = CommandRunner()
-    runner.run("amdctl", ["-g"])
-    voltage = runner.output
+    voltage_process.run("amdctl", ["-g"])
+    voltage = voltage_process.output
     voltages = []
     for line in voltage:
         if "mV" in line:
@@ -190,7 +114,7 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.gpuTemp = 0
         self.sysTemp = 0
         self.voltage = 0.5
-        self.underVolt = ""
+        self.undervolt = ""
         self.minrecordedVoltage = 2.0
         self.maxrecordedVoltage = 0
         self.selected_color = (255, 255, 255)
@@ -204,7 +128,6 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.cpuFanMode = PFS.Auto
         self.gpuFanMode = PFS.Auto
         self.KB30Timeout = ECS.KB_30_AUTO_OFF.value
-        self.trackpad = ECS.TRACKPADENABLED.value
         self.batteryChargeLimit = ECS.BATTERYLIMITOFF.value
 
     def _initialize_ec_handler(self):
@@ -328,10 +251,10 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
 
     # Create a timer to update the UI
     def setUpdateUITimer(self):
-        print("Setting up callback timer for %d(ms)" % UPDATE_INTERVAL)
+        print("Setting up callback timer for %d(ms)" % UPDATE_INTERVAL_MS)
         self.my_timer = QTimer()
         self.my_timer.timeout.connect(self.updateNitroStatus)
-        self.my_timer.start(UPDATE_INTERVAL)
+        self.my_timer.start(UPDATE_INTERVAL_MS)
 
     # ----------------------------------------------------
     # Read the various EC registers and update the GUI
@@ -345,8 +268,6 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.batteryChargeLimit = self.ECHandler.ec_read(
             int(ECS.BATTERYCHARGELIMIT.value, 0)
         )
-        self.trackpad = self.ECHandler.ec_read(int(ECS.TRACKPADSTATUS.value, 0))
-
         self.cpuFanSpeed = self.ECHandler.ec_read(
             int(ECS.CPU_MANUAL_SPEED_CONTROL.value, 0)
         )
@@ -415,12 +336,12 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
             int(ECS.NITROMODE.value, 0), int(ECS.EXTREMEMODE.value, 0)
         )
         self.setGlobalAuto()
-
+        
     def setTurboMode(self):
         self.ECHandler.ec_write(
             int(ECS.NITROMODE.value, 0), int(ECS.EXTREMEMODE.value, 0)
         )
-        self.setGlobalAuto()
+        self.setGlobalTurbo()
 
     def setGlobalAuto(self):
         if self.turboEnabled:

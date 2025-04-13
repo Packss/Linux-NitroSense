@@ -39,6 +39,8 @@ class ECWrite:
 
     def ec_write(self, address: int, value: int):
         try:
+            if self.ec_file is None:
+                self._handle_error("EC file is not initialized. Ensure '_setup_ec()' was successful.")
             self.ec_file.seek(address)
             self.ec_file.write(bytearray([value]))
         except Exception as e:
@@ -46,6 +48,8 @@ class ECWrite:
 
     def ec_refresh(self):
         try:
+            if self.ec_file is None:
+                self._handle_error("EC file is not initialized. Ensure '_setup_ec()' was successful.")
             self.ec_file.seek(0)
             self.buffer = self.ec_file.read()
             if not self.buffer:
