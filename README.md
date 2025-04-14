@@ -5,6 +5,11 @@ _[OPTIONAL]_
 - Install ```amdctl``` for undervolt and voltage readings
 - Install [acer-predator-module](https://github.com/JafarAkhondali/acer-predator-turbo-and-rgb-keyboard-linux-module) for keyboard rgb control
 
+## Binary release:
+- Get the latest binary [here](https://github.com/Packss/Linux-NitroSense/releases/latest)
+- Download ```nitrosense```
+- Execute ```sudo -E ./nitrosense```
+- No dependencies needed
 
 ## Dependencies [Development]:
 * Ubuntu / Linux Mint:
