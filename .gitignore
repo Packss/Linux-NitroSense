@@ -4,4 +4,5 @@ venv
 release
 packenv
 .idea
+.vscode
 __pycache__
