@@ -21,26 +21,26 @@ _[OPTIONAL]_
   ```
 
 * Arch Linux:
- ```sh
- sudo pacman -Syu linux-headers
+  ```sh
+  sudo pacman -Syu linux-headers
 
- #amdctl and acpi_ec can be installed via git, or from the AUR
- paru -Syu amdctl acpi_ec-dkms-git
- sudo modprobe acpi_ec
- sudo cat /dev/ec #confirm access to EC
+  #amdctl and acpi_ec can be installed via git, or from the AUR
+  paru -Syu amdctl acpi_ec-dkms-git
+  sudo modprobe acpi_ec
+  sudo cat /dev/ec #confirm access to EC
 
- #install python dependencies with venv
- python3 -m venv ./venv
- source ./venv/bin/activate
- pip install pyqt6 qyqt6-charts
- ```
+  #install python dependencies with venv
+  python3 -m venv ./venv
+  source ./venv/bin/activate
+  pip install pyqt6 qyqt6-charts
+  ```
 
 ## Install:
 - From the command line
-```sh
-git clone https://github.com/Packss/Linux-NitroSense/
-cd Linux-NitroSense/
-```
+ ```sh
+ git clone https://github.com/Packss/Linux-NitroSense/
+ cd Linux-NitroSense/
+ ```
 
 ## Usage:
 ### COMMAND LINE
