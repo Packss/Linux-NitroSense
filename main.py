@@ -625,7 +625,7 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.ECHandler.shutdown_ec()
         voltage_process.close()
         print("Exiting")
-        exit(0)
+        sys.exit(0)
 
 
 app = QtWidgets.QApplication(sys.argv)
