@@ -1,4 +1,6 @@
 import enum
+import sys
+from dmidecode import DMIDecode
 
 ## ------------------------------##
 ## --Nitro EC Register Class--##
@@ -9,7 +11,8 @@ import enum
 # unexpected behavior or damage to the laptop.
 # Use at your own risk.
 # ---------------------------------##
-class ECS(enum.Enum):
+
+class ECS_AN515_46(enum.Enum):
     GPU_FAN_MODE_CONTROL = "0x21"   # Address to set GPU fan mode
     GPU_AUTO_MODE = "0x10"
     GPU_TURBO_MODE = "0x20"
@@ -56,3 +59,17 @@ class ECS(enum.Enum):
     QUIETMODE = "0x00"  
     DEFAULTMODE = "0x01"
     EXTREMEMODE = "0x04"
+
+MODEL_TO_ECS = {
+    "Nitro AN515-46": ECS_AN515_46,
+}
+
+model = DMIDecode().model()
+print(f"Detected running on: {model}")
+
+ECS = MODEL_TO_ECS.get(model)
+if ECS:
+    print(f"Using registers for {model}")
+else:
+    print(f"Device {model} not supported!")
+    sys.exit(1)
