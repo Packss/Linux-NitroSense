@@ -1,4 +1,5 @@
 import os
+import sys
 from PyQt6.QtCore import QProcess
 
 class ECWrite:
@@ -72,4 +73,4 @@ class ECWrite:
 
     def _handle_error(self, message):
         print(f"Error: {message}")
-        exit(1)
+        sys.exit(1)
