@@ -1,5 +1,5 @@
 ## NitroSense™ "clone" for linux ```AN515-46```
-### Controls fan speed, gaming modes and undervolting on Linux. This application is intended for Acer Nitro 5 AN515-46 model (contact me if you want to know how to port it to another one).
+### Controls fan speed, gaming modes and undervolting on Linux. This application is intended for Acer Nitro 5 AN515-46 model (contact me if you want me to add support for another one).
 ![image](https://github.com/user-attachments/assets/6bb2a8e8-4816-4b86-ac8d-e882fb464f15)
 ![image](https://github.com/user-attachments/assets/9b91a2f9-94e8-4f72-bb1b-cb8978ae20cd)
 
