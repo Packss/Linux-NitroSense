@@ -936,7 +936,7 @@ class Ui_NitroSense(object):
         self.formLayout = QtWidgets.QFormLayout()
         self.formLayout.setLabelAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignVCenter)
         self.formLayout.setFormAlignment(QtCore.Qt.AlignmentFlag.AlignLeading|QtCore.Qt.AlignmentFlag.AlignLeft|QtCore.Qt.AlignmentFlag.AlignTop)
-        self.formLayout.setContentsMargins(8, -1, 8, -1)
+        self.formLayout.setContentsMargins(8, 8, 8, -1)
         self.formLayout.setHorizontalSpacing(40)
         self.formLayout.setVerticalSpacing(4)
         self.formLayout.setObjectName("formLayout")
@@ -1063,7 +1063,7 @@ class Ui_NitroSense(object):
         self.verticalLayout.addWidget(self.fan_control_tab)
 
         self.retranslateUi(NitroSense)
-        self.fan_control_tab.setCurrentIndex(0)
+        self.fan_control_tab.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(NitroSense)
 
     def retranslateUi(self, NitroSense):
