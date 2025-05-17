@@ -110,6 +110,7 @@ class ECS_AN515_44(enum.Enum):
 
 MODEL_TO_ECS = {
     "Nitro AN515-46": ECS_AN515_46,
+    "Nitro AN515-56": ECS_AN515_46,
     "Nitro AN515-44": ECS_AN515_44,
 }
 
