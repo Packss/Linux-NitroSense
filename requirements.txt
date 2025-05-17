@@ -1,0 +1,12 @@
+altgraph==0.17.4
+packaging==24.2
+pip==25.0.1
+py-dmidecode==0.1.3
+pyinstaller==6.12.0
+pyinstaller-hooks-contrib==2025.2
+PyQt6==6.9.0
+PyQt6-Charts==6.9.0
+PyQt6-Charts-Qt6==6.9.0
+PyQt6-Qt6==6.9.0
+PyQt6_sip==13.10.0
+setuptools==78.1.0
