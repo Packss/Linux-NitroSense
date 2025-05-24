@@ -1,11 +1,16 @@
-## NitroSense™ "clone" for linux ```AN515-46```
-### Controls fan speed, gaming modes and undervolting on Linux. This application is intended for Acer Nitro 5 AN515-46 model (contact me if you want me to add support for another one).
+## NitroSense™ "clone" for linux
+### Controls fan speed, gaming modes and undervolting on Linux.
 ![image](https://github.com/user-attachments/assets/6bb2a8e8-4816-4b86-ac8d-e882fb464f15)
 ![image](https://github.com/user-attachments/assets/9b91a2f9-94e8-4f72-bb1b-cb8978ae20cd)
 
+## Current supported devices:
+- AN515-44
+- AN515-46
+- AN515-56
+- AN515-58
 
 _[OPTIONAL]_
-- Install ```amdctl``` for undervolt and voltage readings
+- Install ```amdctl``` for undervolt and voltage readings on amd.
 - Install [acer-predator-module](https://github.com/JafarAkhondali/acer-predator-turbo-and-rgb-keyboard-linux-module) for keyboard rgb control
 
 ## Binary release:
@@ -87,9 +92,3 @@ nvidia-smi
 Packages:
 * ```Python Qt6``` -> [PyQt6](https://pypi.org/project/PyQt6/)
 * ```acpi_ec``` -> [acpi_ec by musikid](https://github.com/musikid/acpi_ec/)
-
-## This is a fork of [PredatorSense by snowyoneill](https://github.com/snowyoneill/Linux-PredatorSense), customized for ```AN515-46-R5WF```
-
-## Changelog:
-
-Nothing yet
