@@ -1,42 +1,31 @@
 import os
 import sys
-from PyQt6.QtCore import QProcess
 
 class ECWrite:
-    EC_IO_FILE = (
-        '/dev/ec'
-        if os.system('ls /sys/kernel/debug/ec/ec0/io 2> /dev/null > /dev/null')
-        else '/sys/kernel/debug/ec/ec0/io'
-    )
 
     def __init__(self):
-        self.ec_path = self.EC_IO_FILE
         self.buffer = b''
         self.ec_file = None
-        print(f"Setting up access to the EC at: {self.ec_path}")
-        self._setup_ec()
-
-    def _setup_ec(self):
-        try:
-            self.ec_file = open(self.ec_path, 'rb+')
-        except PermissionError:
-            self._handle_error("Run the program with administrator privileges (sudo).")
-        except FileNotFoundError:
-            print(f"{self.ec_path} not found. Attempting to load the 'acpi_ec' module.")
-            self._load_acpi_ec_module()
-        except Exception as e:
-            self._handle_error(f"Unexpected error while setting up the EC: {e}")
+        self._load_acpi_ec_module()
+        if not self.ec_file.writable():
+            self._handle_error("EC file is not writable. Ensure you have the necessary permissions.")
 
     def _load_acpi_ec_module(self):
-        process = QProcess()
-        process.start('modprobe acpi_ec')
-        process.waitForFinished()
-        process.close()
+        os.system('modprobe -r ec_sys')
+        os.system('modprobe ec_sys write_support=y')
+        if os.path.exists('/sys/kernel/debug/ec/ec0/io'):
+            self.ec_file = open('/sys/kernel/debug/ec/ec0/io', 'wb+')
+            print("Loaded 'ec_sys' module successfully.")
+            return
+        else:
+            print("Failed to load 'ec_sys' module. Attempting to load 'acpi_ec' module.")
 
-        try:
-            self.ec_file = open(self.ec_path, 'rb+')
-        except FileNotFoundError:
-            self._handle_error("Failed to load the 'acpi_ec' module.")
+        os.system('modprobe acpi_ec')
+        if os.path.exists('/dev/ec'):
+            self.ec_file = open('/dev/ec', 'wb+')
+            print("Loaded 'acpi_ec' module successfully.")
+        else:
+            self._handle_error("Failed to load 'acpi_ec' module.")
 
     def ec_write(self, address: int, value: int):
         try:
