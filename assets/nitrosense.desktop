@@ -1,10 +1,9 @@
 [Desktop Entry]
 Name=Linux NitroSense
 StartupWMClass=Linux NitroSense
-Encoding=UTF-8
 Version=1.0
 Type=Application
 Terminal=false
-Exec=sh -c "pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY sh -c 'cd <path_to_NitroSense> && python3 main.py'"
+Exec=sudo -AE /opt/nitrosense
 Comment=Application to control fan speed for Acer Nitro 5
-Icon=<path_to_NitroSense>/app_icon.ico
+Icon=nitrosense.ico
