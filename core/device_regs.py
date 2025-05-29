@@ -118,6 +118,15 @@ MODEL_TO_ECS = {
 model = DMIDecode().model()
 print(f"Detected running on: {model}")
 
+cpu = DMIDecode().cpu_type().lower()
+if "amd" in cpu:
+    CPU_TYPE = "AMD"
+elif "intel" in cpu:
+    CPU_TYPE = "Intel"
+else:
+    CPU_TYPE = "Unknown"
+
+
 ECS = MODEL_TO_ECS.get(model)
 if ECS:
     print(f"Using registers for {model}")
