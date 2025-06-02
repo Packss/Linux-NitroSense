@@ -1,5 +1,6 @@
 from PyQt6.QtCore import QObject, QProcess, pyqtSignal
 
+
 class CommandRunner(QObject):
     finished = pyqtSignal(str)  # Emits the full output when done
 
@@ -21,26 +22,30 @@ class CommandRunner(QObject):
 
     def _on_finished(self):
         self.finished.emit(self.output)  # Emit the full output
-    
+
     def close(self):
         self.process.close()
+
 
 def checkUndervoltStatus(self):
     self.undervolt = "Undervolt not supported for this CPU type."
 
+
 def applyUndervolt(self):
     self.undervolt = "Undervolt not supported for this CPU type."
 
-voltage_process = QProcess()
-def checkVoltage(self):
 
+voltage_process = QProcess()
+
+
+def checkVoltage(self):
     ## https://askubuntu.com/questions/876286/how-to-monitor-the-vcore-voltage
-    voltage_process.start('sudo rdmsr 0x198 -a -u --bitfield 47:32') # All processors 
+    voltage_process.start("sudo rdmsr 0x198 -a -u --bitfield 47:32")  # All processors
     voltage_process.waitForFinished()
     voltage = voltage_process.readAll()
 
     if voltage:
-        data = [int(line) for line in voltage.data().decode('utf-8').splitlines()]
+        data = [int(line) for line in voltage.data().decode("utf-8").splitlines()]
         # print(data)
         avg_v = sum(data) / len(data)
         voltage = int(avg_v) / 8192
@@ -51,3 +56,4 @@ def checkVoltage(self):
             self.minrecordedVoltage = voltage
         if voltage > self.maxrecordedVoltage:
             self.maxrecordedVoltage = voltage
+

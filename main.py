@@ -1,18 +1,22 @@
-import sys
-import os
 import enum
+import os
+import sys
 
-from PyQt6 import QtWidgets, QtGui
-from PyQt6.QtCore import Qt, QTimer, QProcess, QObject, pyqtSignal
-from PyQt6.QtGui import QPalette, QColor
+from PyQt6 import QtGui, QtWidgets
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtGui import QColor, QPalette
 
 import utils.keyboard as keyboard
-from core.ecwrite import *
+from core.device_regs import CPU_TYPE, ECS
+from core.ecwrite import ECWrite
 from ui.frontend import Ui_NitroSense
-from core.device_regs import ECS, CPU_TYPE
+
+if not ECS:
+    sys.exit(1)
 
 CONFIG_FOLDER = "/etc/nitrosense/"
 UPDATE_INTERVAL_MS = 1000  # 1 sec interval
+
 
 ## ------------------------------##
 ## -------Nitro Fan Mode------##
@@ -23,17 +27,19 @@ class PFS(enum.Enum):
 
 
 if CPU_TYPE == "AMD":
-    from core.amdctl import checkUndervoltStatus, applyUndervolt, checkVoltage
+    from core.amdctl import applyUndervolt, checkUndervoltStatus, checkVoltage
 elif CPU_TYPE == "Intel":
-    from core.intelctl import checkUndervoltStatus, applyUndervolt, checkVoltage
+    from core.intelctl import applyUndervolt, checkUndervoltStatus, checkVoltage
 else:
+
     def checkUndervoltStatus(self):
         self.undervolt = "Undervolt not supported for this CPU type."
+
     def applyUndervolt(self):
         self.undervolt = "Undervolt not supported for this CPU type."
+
     def checkVoltage(self):
         self.voltage = "Voltage not supported for this CPU type."
-
 
 
 ## ------------------------------##
@@ -279,7 +285,7 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
             int(ECS.NITROMODE.value, 0), int(ECS.EXTREMEMODE.value, 0)
         )
         self.setGlobalAuto()
-        
+
     def setTurboMode(self):
         self.ECHandler.ec_write(
             int(ECS.NITROMODE.value, 0), int(ECS.EXTREMEMODE.value, 0)
@@ -546,19 +552,19 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.setBatteryStatus()
         self.setNitroMode()
 
-        #self.voltageChart.update(float("%1.2f" % self.voltage))
-        #self.cpuChart.update(self.cpuTemp)
-        #self.gpuChart.update(self.gpuTemp)
-        #self.sysChart.update(self.sysTemp)
-        #self.cpuFanChart.update(self.cpufanspeed)
-        #self.gpuFanChart.update(self.gpufanspeed)
-#
+        # self.voltageChart.update(float("%1.2f" % self.voltage))
+        # self.cpuChart.update(self.cpuTemp)
+        # self.gpuChart.update(self.gpuTemp)
+        # self.sysChart.update(self.sysTemp)
+        # self.cpuFanChart.update(self.cpufanspeed)
+        # self.gpuFanChart.update(self.gpufanspeed)
+        #
         self.cpuFanSpeedValue.setText(str(self.cpufanspeed) + " RPM")
         self.gpuFanSpeedValue.setText(str(self.gpufanspeed) + " RPM")
         self.cpuTempValue.setText(str(self.cpuTemp) + "°")
         self.gpuTempValue.setText(str(self.gpuTemp) + "°")
         self.sysTempValue.setText(str(self.sysTemp) + "°")
-#
+        #
         self.powerStatusValue.setText(str(self.powerPluggedIn))
 
     # ----------------------------------------------------

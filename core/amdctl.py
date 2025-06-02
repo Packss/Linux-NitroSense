@@ -1,5 +1,6 @@
 from PyQt6.QtCore import QObject, QProcess, pyqtSignal
 
+
 class CommandRunner(QObject):
     finished = pyqtSignal(str)  # Emits the full output when done
 
@@ -21,9 +22,10 @@ class CommandRunner(QObject):
 
     def _on_finished(self):
         self.finished.emit(self.output)  # Emit the full output
-    
+
     def close(self):
         self.process.close()
+
 
 def checkUndervoltStatus(self):
     runner = CommandRunner()
@@ -32,7 +34,11 @@ def checkUndervoltStatus(self):
     # remove the first 3 lines which are not needed
     underVoltStatus = underVoltStatus.splitlines()[3:]
     # we only want column 0, 5, 6, 7, 10 and 11
-    underVoltStatus = '\n'.join(f"{l[0]}\t{l[5]}\t{l[6].replace('.00', '')}\t{l[7]}\t{l[11]}" for l in (line.split() for line in underVoltStatus) if len(l) > 11)
+    underVoltStatus = "\n".join(
+        f"{l[0]}\t{l[5]}\t{l[6].replace('.00', '')}\t{l[7]}\t{l[11]}"
+        for l in (line.split() for line in underVoltStatus)
+        if len(l) > 11
+    )
 
     self.undervolt = underVoltStatus
 
@@ -51,6 +57,8 @@ def applyUndervolt(self):
 # Global process better perf instead of creating and destroying every update cycle.
 # Update the current VCore
 voltage_process = CommandRunner()
+
+
 def checkVoltage(self):
     voltage_process.run("amdctl", ["-g", "-c0"])
     voltage = voltage_process.output
