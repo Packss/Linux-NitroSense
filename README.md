@@ -79,3 +79,14 @@ _[OPTIONAL]_
 Packages:
 * ```Python Qt6``` -> [PyQt6](https://pypi.org/project/PyQt6/)
 * ```acpi_ec``` -> [acpi_ec by musikid](https://github.com/musikid/acpi_ec/)
+
+
+##
+
+Hey! I'm an undergraduate student and would be awesome if you could support me!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R71GROZE)
+
+I'm doing this project because i wanted something like this to exist, but afaik no other project supports more than one device.
+
+You can also contribute by [opening a PR](https://github.com/Packss/Linux-NitroSense/pulls)!
