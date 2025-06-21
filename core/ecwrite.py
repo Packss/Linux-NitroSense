@@ -32,6 +32,9 @@ class ECWrite:
             self._handle_error("Failed to load 'acpi_ec' module.")
 
     def ec_write(self, address: int, value: int):
+        if address is None:
+            print("Function not supported for this device.")
+            return -1
         try:
             if self.ec_file is None:
                 self._handle_error(
@@ -56,6 +59,9 @@ class ECWrite:
             self._handle_error(f"Error refreshing the EC buffer: {e}")
 
     def ec_read(self, address: int) -> int:
+        if address is None:
+            print("Function not supported for this device.")
+            return -1
         try:
             if not self.buffer:
                 self._handle_error(
