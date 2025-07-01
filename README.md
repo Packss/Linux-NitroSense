@@ -8,6 +8,7 @@
 - AN515-46
 - AN515-56
 - AN515-58
+- ANV15-41
 
 _[OPTIONAL]_
 - Install ```amdctl``` for undervolt and voltage readings on amd.
