@@ -16,9 +16,13 @@ class ECWrite:
         os.system("modprobe -r ec_sys")
         os.system("modprobe ec_sys write_support=y")
         if os.path.exists("/sys/kernel/debug/ec/ec0/io"):
-            self.ec_file = open("/sys/kernel/debug/ec/ec0/io", "wb+")
-            print("Loaded 'ec_sys' module successfully.")
-            return
+            try:
+                self.ec_file = open("/sys/kernel/debug/ec/ec0/io", "wb+")
+                print("Loaded 'ec_sys' module successfully.")
+                return
+            except Exception as e:
+                print(f"Opening ec as rw failed with: {e}")
+                print("Trying to load acpi_ec")
         else:
             print(
                 "Failed to load 'ec_sys' module. Attempting to load 'acpi_ec' module."
