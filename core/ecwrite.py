@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 
 
@@ -13,8 +14,8 @@ class ECWrite:
             )
 
     def _load_acpi_ec_module(self):
-        os.system("modprobe -r ec_sys")
-        os.system("modprobe ec_sys write_support=y")
+        subprocess.run(["modprobe", "-r", "ec_sys"], check=False)
+        subprocess.run(["modprobe", "ec_sys", "write_support=y"], check=False)
         if os.path.exists("/sys/kernel/debug/ec/ec0/io"):
             try:
                 self.ec_file = open("/sys/kernel/debug/ec/ec0/io", "wb+")
@@ -28,7 +29,7 @@ class ECWrite:
                 "Failed to load 'ec_sys' module. Attempting to load 'acpi_ec' module."
             )
 
-        os.system("modprobe acpi_ec")
+        subprocess.run(["modprobe", "acpi_ec"], check=False)
         if os.path.exists("/dev/ec"):
             self.ec_file = open("/dev/ec", "wb+")
             print("Loaded 'acpi_ec' module successfully.")
@@ -41,6 +42,7 @@ class ECWrite:
                 self._handle_error(
                     "EC file is not initialized. Ensure '_setup_ec()' was successful."
                 )
+                return
             self.ec_file.seek(address)
             self.ec_file.write(bytearray([value]))
         except Exception as e:
@@ -52,6 +54,7 @@ class ECWrite:
                 self._handle_error(
                     "EC file is not initialized. Ensure '_setup_ec()' was successful."
                 )
+                return
             self.ec_file.seek(0)
             self.buffer = self.ec_file.read()
             if not self.buffer:
@@ -68,12 +71,14 @@ class ECWrite:
             return self.buffer[address]
         except Exception as e:
             self._handle_error(f"Error reading from the EC buffer: {e}")
+            return 0
 
     def shutdown_ec(self):
         if self.ec_file:
             self.ec_file.close()
             print("EC access successfully terminated.")
 
-    def _handle_error(self, message):
+    @staticmethod
+    def _handle_error(message):
         print(f"Error: {message}")
         sys.exit(1)

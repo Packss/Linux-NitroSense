@@ -48,7 +48,7 @@ _[OPTIONAL]_
 ## Usage:
 ### COMMAND LINE
 
- - ```sudo``` is required in order to access the Super I/O EC registers and apply undervolt offsets.
+ - ```sudo``` is required to access the Super I/O EC registers and apply undervolt offsets.
   - From the command line run the main script as root:
     ```sh
     sudo -E python3 main.py
@@ -86,7 +86,7 @@ Packages:
 
 ##
 
-Hey! I'm an undergraduate student and would be awesome if you could support me!
+Hey! I'm an undergraduate student, and it would be awesome if you could support me!
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R71GROZE)
 
