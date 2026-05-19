@@ -7,7 +7,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QColor, QPalette
 
 import utils.keyboard as keyboard
-from core.device_regs import CPU_TYPE, ECS
+from core.device_regs import CPU_TYPE, ECS, KEYBOARD_UNSUPPORTED_MODELS, model
 from core.ecwrite import ECWrite
 from ui.frontend import Ui_NitroSense
 
@@ -78,6 +78,16 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.gpuFanMode = PFS.Auto
         self.KB30Timeout = ECS.KB_30_AUTO_OFF.value
         self.batteryChargeLimit = ECS.BATTERYLIMITOFF.value
+        self.keyboardSupported = self._is_keyboard_supported()
+
+    def _is_keyboard_supported(self):
+        if model in KEYBOARD_UNSUPPORTED_MODELS:
+            return False
+        return True;
+        # TODO: I only have an AN515-53 so I recommend you to test it in your models.
+        #return os.path.exists(keyboard.CHARACTER_DEVICE) and os.path.exists(
+        #    keyboard.CHARACTER_DEVICE_STATIC
+        #)
 
     def _initialize_ec_handler(self):
         self.ECHandler = ECWrite()
@@ -87,13 +97,19 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         checkUndervoltStatus(self)
         self.checkPowerTempFan()
         self.checkNitroStatus()
-        self.kbLoadConfig()
+        if self.keyboardSupported:
+            self.kbLoadConfig()
         self.loadConfig()
         self.setupGUI()
 
     # ----------------------------------------------------
     # Initialise the frame, check all registers and set the appropriate widgets
     def setupGUI(self):
+        if not self.keyboardSupported:
+            keyboard_tab_index = self.fan_control_tab.indexOf(self.keyboard_tab)
+            if keyboard_tab_index != -1:
+                self.fan_control_tab.removeTab(keyboard_tab_index)
+
         # when any of the radio buttons are clicked, also save the current settings
 
         self.global_auto.clicked.connect(self.setDefaultMode)
@@ -112,10 +128,11 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         self.exit_button.clicked.connect(self.shutdown)
 
         self.undervolt_button.clicked.connect(lambda: applyUndervolt(self))
-        self.color_button.clicked.connect(lambda: self.saveAndRun(self.kbSelectColor))
-        self.apply_button.clicked.connect(lambda: self.saveAndRun(self.kbApplySettings))
-        self.save_button.clicked.connect(lambda: self.saveAndRun(self.kbSaveConfig))
-        self.load_button.clicked.connect(lambda: self.saveAndRun(self.kbLoadConfig))
+        if self.keyboardSupported:
+            self.color_button.clicked.connect(lambda: self.saveAndRun(self.kbSelectColor))
+            self.apply_button.clicked.connect(lambda: self.saveAndRun(self.kbApplySettings))
+            self.save_button.clicked.connect(lambda: self.saveAndRun(self.kbSaveConfig))
+            self.load_button.clicked.connect(lambda: self.saveAndRun(self.kbLoadConfig))
 
         # Set the 30 sec backlight timer
         if self.KB30Timeout == int(ECS.KB_30_AUTO_OFF.value, 0):
@@ -435,6 +452,9 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
 
     # keyboard
     def kbSelectColor(self):
+        if not self.keyboardSupported:
+            return
+
         # open color dialog with current color selected
         color = QtWidgets.QColorDialog.getColor(
             initial=QtGui.QColor.fromRgb(*self.selected_color)
@@ -443,6 +463,9 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
             self.selected_color = (color.red(), color.green(), color.blue())
 
     def kbApplySettings(self):
+        if not self.keyboardSupported:
+            return
+
         mode = self.mode_combo.currentIndex()
         zone = self.zone_combo.currentIndex()
         speed = self.speed_spin.value()
@@ -453,6 +476,9 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
         keyboard.set_mode(mode, zone, speed, brightness, direction, red, green, blue)
 
     def kbSaveConfig(self):
+        if not self.keyboardSupported:
+            return
+
         if not os.path.exists(CONFIG_FOLDER + "rbg.conf"):
             os.system(f"mkdir -p {CONFIG_FOLDER}")
             os.system(f"touch {CONFIG_FOLDER + 'rbg.conf'}")
@@ -468,6 +494,9 @@ class MainWindow(QtWidgets.QDialog, Ui_NitroSense):
             f.write(f"{self.selected_color[2]}\n")
 
     def kbLoadConfig(self):
+        if not self.keyboardSupported:
+            return
+
         if not os.path.exists(CONFIG_FOLDER + "rbg.conf"):
             return
         path = f"{CONFIG_FOLDER + 'rbg.conf'}"

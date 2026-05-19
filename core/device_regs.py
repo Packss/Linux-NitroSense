@@ -123,6 +123,10 @@ MODEL_TO_ECS = {
     "Nitro AN517-55": ECS_AN515_46,
 }
 
+KEYBOARD_UNSUPPORTED_MODELS = {
+    "Nitro AN515-53",
+}
+
 model = DMIDecode().model()
 print(f"Detected running on: {model}")
 
