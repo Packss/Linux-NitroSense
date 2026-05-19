@@ -6,6 +6,7 @@
 ## Current supported devices:
 - AN515-44
 - AN515-46
+- AN515-53
 - AN515-54
 - AN515-56
 - AN515-57

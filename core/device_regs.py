@@ -114,12 +114,17 @@ class ECS_AN515_44(enum.Enum):
 MODEL_TO_ECS = {
     "Nitro AN515-45": ECS_AN515_46,
     "Nitro AN515-46": ECS_AN515_46,
+    "Nitro AN515-53": ECS_AN515_46,
     "Nitro AN515-54": ECS_AN515_46,
     "Nitro AN515-56": ECS_AN515_46,
     "Nitro AN515-44": ECS_AN515_44,
     "Nitro AN515-57": ECS_AN515_46,
     "Nitro AN515-58": ECS_AN515_46,
     "Nitro AN517-55": ECS_AN515_46,
+}
+
+KEYBOARD_UNSUPPORTED_MODELS = {
+    "Nitro AN515-53",
 }
 
 model = DMIDecode().model()
