@@ -145,4 +145,5 @@ if ECS:
     print(f"Using registers for {model}")
 else:
     print(f"Device {model} not supported!")
-    sys.exit(1)
+    print(f"Trying the default AN515-46 registers, caution!")
+    ECS = MODEL_TO_ECS.get("Nitro AN515-46")
